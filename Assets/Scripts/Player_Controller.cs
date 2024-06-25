@@ -18,7 +18,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
 
     // Ground check variables
     public Transform groundCheck;
-    public float checkRadius;
+    public float checkRadius = 0.1f; // Default value to ensure it's set
     public LayerMask whatIsGround;
 
     // Camera follow variables
@@ -45,6 +45,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
         // Check if the player is on the ground
         bool previousGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+
         if (isGrounded != previousGrounded)
         {
             UnityEngine.Debug.Log("Is Grounded: " + isGrounded);
