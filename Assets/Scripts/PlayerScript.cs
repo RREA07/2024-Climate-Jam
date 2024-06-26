@@ -25,6 +25,10 @@ public class PlayerScript : MonoBehaviour
         {
             move(Vector2.right);
         }
+        else if (Input.GetKeyDown(KeyCode.UpArrow) && playerRb.velocity.magnitude < 10 && !isDead)
+        {
+            jump();
+        }
 
 
     }
@@ -44,7 +48,8 @@ public class PlayerScript : MonoBehaviour
 
     void jump()
     {
-
+        //inAir = true;
+        playerRb.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
     }
 
 }
