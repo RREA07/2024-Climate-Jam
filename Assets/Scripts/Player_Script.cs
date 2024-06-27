@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class Player_Controller_Placeholder : MonoBehaviour
@@ -25,6 +22,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public Transform cameraTransform;
     public Vector3 cameraOffset;
 
+    //Upgrades
+    public int doubleJump;
+
     void Start()
     {
         // Get the Rigidbody2D component attached to the player GameObject
@@ -35,6 +35,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
         {
             cameraTransform = Camera.main.transform;
         }
+
+        //Enables double jump
+        doubleJump = 1;
     }
 
     void Update()
@@ -52,27 +55,22 @@ public class Player_Controller_Placeholder : MonoBehaviour
         }
 
         // Check for jump input (space bar)
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            UnityEngine.Debug.Log("Space key pressed");
+            UnityEngine.Debug.Log("UpArrow key pressed");
+            jump();
         }
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+
+        //Resets doubleJump
+        if (isGrounded)
         {
-            UnityEngine.Debug.Log("Attempting to jump");
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            UnityEngine.Debug.Log("Jump triggered with velocity: " + rb.velocity);
+            doubleJump = 1;
         }
     }
 
     void FixedUpdate()
     {
-        // Horizontal movement
-        float moveVelocity = moveInput * moveSpeed;
-        rb.velocity = new Vector2(moveVelocity, rb.velocity.y);
-
-        // Update camera position
-        Vector3 targetPosition = transform.position + cameraOffset;
-        cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, handling);
+        move();
     }
 
     void OnDrawGizmos()
@@ -81,4 +79,28 @@ public class Player_Controller_Placeholder : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
     }
+
+    //Makes player move left and right
+    void move()
+    {
+        // Horizontal movement
+        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+
+        // Update camera position
+        Vector3 targetPosition = transform.position + cameraOffset;
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, handling);
+    }
+
+    //Makes the player jumps into air
+    void jump()
+    {
+        if (isGrounded || doubleJump > 0)
+        {
+            doubleJump--;
+            UnityEngine.Debug.Log("Attempting to jump");
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            UnityEngine.Debug.Log("Jump triggered with velocity: " + rb.velocity);
+        }
+    }
 }
+
