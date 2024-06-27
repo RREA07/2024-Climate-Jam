@@ -4,8 +4,8 @@ public class Player_Controller_Placeholder : MonoBehaviour
 {
     // Movement and jump settings adjustable in the inspector
     [Header("Movement Settings")]
-    public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float moveSpeed = 7f;
+    public float jumpForce = 12f;
     public float handling = 0.1f;
 
     // Internal variables
@@ -14,16 +14,17 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private float moveInput;
 
     // Ground check variables
-    public Transform groundCheck;
+    public UnityEngine.Transform groundCheck;
     public float checkRadius = 0.1f; // Default value to ensure it's set
     public LayerMask whatIsGround;
 
     // Camera follow variables
-    public Transform cameraTransform;
+    public UnityEngine.Transform cameraTransform;
     public Vector3 cameraOffset;
 
     //Upgrades
-    public int doubleJump;
+    public bool dJump;
+    private int dJumpCoolDown = 0;
 
     void Start()
     {
@@ -37,13 +38,16 @@ public class Player_Controller_Placeholder : MonoBehaviour
         }
 
         //Enables double jump
-        doubleJump = 1;
+        dJump = true;
     }
 
     void Update()
     {
         // Get horizontal input (A/D keys or Left/Right arrow keys)
         moveInput = Input.GetAxis("Horizontal");
+
+        //Movement
+        move();
 
         // Check if the player is on the ground
         bool previousGrounded = isGrounded;
@@ -62,15 +66,15 @@ public class Player_Controller_Placeholder : MonoBehaviour
         }
 
         //Resets doubleJump
-        if (isGrounded)
+        if (isGrounded && dJump)
         {
-            doubleJump = 1;
+            dJumpCoolDown = 1;
         }
     }
 
     void FixedUpdate()
     {
-        move();
+
     }
 
     void OnDrawGizmos()
@@ -86,6 +90,16 @@ public class Player_Controller_Placeholder : MonoBehaviour
         // Horizontal movement
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
 
+        // Flips sprite
+        if (moveInput > 0.01f)
+        {
+            transform.localScale = Vector3.one;
+        }
+        else if (moveInput < -0.01f)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+
         // Update camera position
         Vector3 targetPosition = transform.position + cameraOffset;
         cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, handling);
@@ -94,13 +108,18 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Makes the player jumps into air
     void jump()
     {
-        if (isGrounded || doubleJump > 0)
+        if (isGrounded || dJumpCoolDown > 0)
         {
-            doubleJump--;
+            dJumpCoolDown--;
             UnityEngine.Debug.Log("Attempting to jump");
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x * moveSpeed * Time.deltaTime, jumpForce);
             UnityEngine.Debug.Log("Jump triggered with velocity: " + rb.velocity);
         }
+    }
+
+    void attack()
+    {
+
     }
 }
 
