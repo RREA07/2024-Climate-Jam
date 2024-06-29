@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/ForestLevels/Forest_lvl_Prototype_02.unity
+    guid: d3b9cdd8cfe05784d896243d57a55e26
   m_configObjects: {}

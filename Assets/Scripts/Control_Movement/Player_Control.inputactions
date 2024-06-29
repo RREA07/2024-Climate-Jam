@@ -79,7 +79,7 @@
             "actions": [
                 {
                     "name": "Melee",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "9b77774e-9b0d-4412-9422-196b8c985d74",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -91,10 +91,10 @@
                 {
                     "name": "",
                     "id": "badbea19-ce02-43c0-b625-51b748f193f2",
-                    "path": "",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Melee",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -134,8 +134,8 @@
             "id": "d954bde1-4e72-43cb-b3f8-444cc05b3222",
             "actions": [
                 {
-                    "name": "New action",
-                    "type": "Button",
+                    "name": "Dash",
+                    "type": "PassThrough",
                     "id": "efa922bd-008d-4226-abe9-006f45f71de6",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -151,7 +151,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
