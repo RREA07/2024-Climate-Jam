@@ -13,7 +13,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
     private float moveInput;
-    //PROBLEM: The particle system doesn't work in prefab
     private ParticleSystem jumpDustInst;
     [SerializeField] private ParticleSystem jumpDust;
 
@@ -21,10 +20,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public UnityEngine.Transform groundCheck;
     public float checkRadius = 0.1f; // Default value to ensure it's set
     public LayerMask whatIsGround;
-
-    // Camera follow variables
-    public UnityEngine.Transform cameraTransform;
-    public Vector3 cameraOffset;
 
     //Upgrades
     public bool dJump;
@@ -36,12 +31,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
         // Get the Rigidbody2D component attached to the player GameObject
         rb = GetComponent<Rigidbody2D>();
 
-        // Ensure the camera transform is assigned
-        if (cameraTransform == null)
-        {
-            cameraTransform = Camera.main.transform;
-        }
-
         //Enables double jump
         dJump = true;
     }
@@ -49,7 +38,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     void Update()
     {
         // Get horizontal input (A/D keys or Left/Right arrow keys)
-        moveInput = Input.GetAxis("Horizontal");
+        moveInput = User_Input.instance.moveInput.x;
 
         //Movement
         move();
@@ -104,10 +93,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
-
-        // Update camera position
-        Vector3 targetPosition = transform.position + cameraOffset;
-        cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, handling);
     }
 
     //Makes the player jumps into air
@@ -125,11 +110,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
                 jumpDustInst = Instantiate(jumpDust, transform.position, Quaternion.identity);
             }
         }
-    }
-
-    void attack()
-    {
-
     }
 }
 
