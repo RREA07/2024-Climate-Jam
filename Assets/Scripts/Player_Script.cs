@@ -8,10 +8,14 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public float jumpForce = 12f;
     public float handling = 0.1f;
 
+
     // Internal variables
     private Rigidbody2D rb;
     private bool isGrounded;
     private float moveInput;
+    //PROBLEM: The particle system doesn't work in prefab
+    private ParticleSystem jumpDustInst;
+    [SerializeField] private ParticleSystem jumpDust;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -25,6 +29,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Upgrades
     public bool dJump;
     private int dJumpCoolDown = 0;
+
 
     void Start()
     {
@@ -114,6 +119,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
             UnityEngine.Debug.Log("Attempting to jump");
             rb.velocity = new Vector2(rb.velocity.x * moveSpeed * Time.deltaTime, jumpForce);
             UnityEngine.Debug.Log("Jump triggered with velocity: " + rb.velocity);
+            //Spawning double jump particles
+            if (dJump && dJumpCoolDown == 0 && !isGrounded)
+            {
+                jumpDustInst = Instantiate(jumpDust, transform.position, Quaternion.identity);
+            }
         }
     }
 
