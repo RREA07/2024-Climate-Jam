@@ -8,34 +8,28 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public float jumpForce = 12f;
     public float handling = 0.1f;
 
+
     // Internal variables
     private Rigidbody2D rb;
     private bool isGrounded;
     private float moveInput;
+    private ParticleSystem jumpDustInst;
+    [SerializeField] private ParticleSystem jumpDust;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
     public float checkRadius = 0.1f; // Default value to ensure it's set
     public LayerMask whatIsGround;
 
-    // Camera follow variables
-    public UnityEngine.Transform cameraTransform;
-    public Vector3 cameraOffset;
-
     //Upgrades
     public bool dJump;
     private int dJumpCoolDown = 0;
+
 
     void Start()
     {
         // Get the Rigidbody2D component attached to the player GameObject
         rb = GetComponent<Rigidbody2D>();
-
-        // Ensure the camera transform is assigned
-        if (cameraTransform == null)
-        {
-            cameraTransform = Camera.main.transform;
-        }
 
         //Enables double jump
         dJump = true;
@@ -44,10 +38,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
     void Update()
     {
         // Get horizontal input (A/D keys or Left/Right arrow keys)
-        moveInput = Input.GetAxis("Horizontal");
+        moveInput = User_Input.instance.moveInput.x;
 
         //Movement
         move();
+        jump();
 
         // Check if the player is on the ground
         bool previousGrounded = isGrounded;
@@ -58,23 +53,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
             UnityEngine.Debug.Log("Is Grounded: " + isGrounded);
         }
 
-        // Check for jump input (space bar)
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            UnityEngine.Debug.Log("UpArrow key pressed");
-            jump();
-        }
-
         //Resets doubleJump
         if (isGrounded && dJump)
         {
             dJumpCoolDown = 1;
         }
-    }
-
-    void FixedUpdate()
-    {
-
     }
 
     void OnDrawGizmos()
@@ -99,26 +82,24 @@ public class Player_Controller_Placeholder : MonoBehaviour
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
-
-        // Update camera position
-        Vector3 targetPosition = transform.position + cameraOffset;
-        cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, handling);
     }
 
     //Makes the player jumps into air
     void jump()
     {
-        if (isGrounded || dJumpCoolDown > 0)
+        if (User_Input.instance.controls.Jumping.Jump.WasPressedThisFrame())
         {
-            dJumpCoolDown--;
-            UnityEngine.Debug.Log("Attempting to jump");
-            rb.velocity = new Vector2(rb.velocity.x * moveSpeed * Time.deltaTime, jumpForce);
-            UnityEngine.Debug.Log("Jump triggered with velocity: " + rb.velocity);
+            if (isGrounded || dJumpCoolDown > 0)
+            {
+                dJumpCoolDown--;
+                rb.velocity = new Vector2(rb.velocity.x * moveSpeed * Time.deltaTime, jumpForce);
+                //Spawning double jump particles
+                if (dJump && dJumpCoolDown == 0 && !isGrounded)
+                {
+                    jumpDustInst = Instantiate(jumpDust, transform.position, Quaternion.identity);
+                }
+            }
         }
-    }
-
-    void attack()
-    {
 
     }
 }
