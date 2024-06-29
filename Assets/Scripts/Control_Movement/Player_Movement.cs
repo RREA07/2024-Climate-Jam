@@ -94,6 +94,90 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Attacking"",
+            ""id"": ""af87f08e-5d76-46b6-8184-9ecd09fc8041"",
+            ""actions"": [
+                {
+                    ""name"": ""Melee"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b77774e-9b0d-4412-9422-196b8c985d74"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""badbea19-ce02-43c0-b625-51b748f193f2"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Melee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Jumping"",
+            ""id"": ""1992d0af-ed0b-44fc-94f6-09f68f2535fe"",
+            ""actions"": [
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""2ed04685-7009-40e6-a8a9-4319421cbddd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""6ddffe59-b2ed-4739-b588-fc1cb79ecc83"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Dashing"",
+            ""id"": ""d954bde1-4e72-43cb-b3f8-444cc05b3222"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""efa922bd-008d-4226-abe9-006f45f71de6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""99487e3e-e900-4a17-aae2-60b0d1d4b81a"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -113,6 +197,15 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
+        // Attacking
+        m_Attacking = asset.FindActionMap("Attacking", throwIfNotFound: true);
+        m_Attacking_Melee = m_Attacking.FindAction("Melee", throwIfNotFound: true);
+        // Jumping
+        m_Jumping = asset.FindActionMap("Jumping", throwIfNotFound: true);
+        m_Jumping_Jump = m_Jumping.FindAction("Jump", throwIfNotFound: true);
+        // Dashing
+        m_Dashing = asset.FindActionMap("Dashing", throwIfNotFound: true);
+        m_Dashing_Newaction = m_Dashing.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -216,6 +309,144 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
         }
     }
     public MovementActions @Movement => new MovementActions(this);
+
+    // Attacking
+    private readonly InputActionMap m_Attacking;
+    private List<IAttackingActions> m_AttackingActionsCallbackInterfaces = new List<IAttackingActions>();
+    private readonly InputAction m_Attacking_Melee;
+    public struct AttackingActions
+    {
+        private @Player_Control m_Wrapper;
+        public AttackingActions(@Player_Control wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Melee => m_Wrapper.m_Attacking_Melee;
+        public InputActionMap Get() { return m_Wrapper.m_Attacking; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(AttackingActions set) { return set.Get(); }
+        public void AddCallbacks(IAttackingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_AttackingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_AttackingActionsCallbackInterfaces.Add(instance);
+            @Melee.started += instance.OnMelee;
+            @Melee.performed += instance.OnMelee;
+            @Melee.canceled += instance.OnMelee;
+        }
+
+        private void UnregisterCallbacks(IAttackingActions instance)
+        {
+            @Melee.started -= instance.OnMelee;
+            @Melee.performed -= instance.OnMelee;
+            @Melee.canceled -= instance.OnMelee;
+        }
+
+        public void RemoveCallbacks(IAttackingActions instance)
+        {
+            if (m_Wrapper.m_AttackingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IAttackingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_AttackingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_AttackingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public AttackingActions @Attacking => new AttackingActions(this);
+
+    // Jumping
+    private readonly InputActionMap m_Jumping;
+    private List<IJumpingActions> m_JumpingActionsCallbackInterfaces = new List<IJumpingActions>();
+    private readonly InputAction m_Jumping_Jump;
+    public struct JumpingActions
+    {
+        private @Player_Control m_Wrapper;
+        public JumpingActions(@Player_Control wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Jump => m_Wrapper.m_Jumping_Jump;
+        public InputActionMap Get() { return m_Wrapper.m_Jumping; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(JumpingActions set) { return set.Get(); }
+        public void AddCallbacks(IJumpingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_JumpingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_JumpingActionsCallbackInterfaces.Add(instance);
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+        }
+
+        private void UnregisterCallbacks(IJumpingActions instance)
+        {
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+        }
+
+        public void RemoveCallbacks(IJumpingActions instance)
+        {
+            if (m_Wrapper.m_JumpingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IJumpingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_JumpingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_JumpingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public JumpingActions @Jumping => new JumpingActions(this);
+
+    // Dashing
+    private readonly InputActionMap m_Dashing;
+    private List<IDashingActions> m_DashingActionsCallbackInterfaces = new List<IDashingActions>();
+    private readonly InputAction m_Dashing_Newaction;
+    public struct DashingActions
+    {
+        private @Player_Control m_Wrapper;
+        public DashingActions(@Player_Control wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_Dashing_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_Dashing; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DashingActions set) { return set.Get(); }
+        public void AddCallbacks(IDashingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DashingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DashingActionsCallbackInterfaces.Add(instance);
+            @Newaction.started += instance.OnNewaction;
+            @Newaction.performed += instance.OnNewaction;
+            @Newaction.canceled += instance.OnNewaction;
+        }
+
+        private void UnregisterCallbacks(IDashingActions instance)
+        {
+            @Newaction.started -= instance.OnNewaction;
+            @Newaction.performed -= instance.OnNewaction;
+            @Newaction.canceled -= instance.OnNewaction;
+        }
+
+        public void RemoveCallbacks(IDashingActions instance)
+        {
+            if (m_Wrapper.m_DashingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IDashingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DashingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DashingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public DashingActions @Dashing => new DashingActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -228,5 +459,17 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
     public interface IMovementActions
     {
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IAttackingActions
+    {
+        void OnMelee(InputAction.CallbackContext context);
+    }
+    public interface IJumpingActions
+    {
+        void OnJump(InputAction.CallbackContext context);
+    }
+    public interface IDashingActions
+    {
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }

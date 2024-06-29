@@ -42,6 +42,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
 
         //Movement
         move();
+        jump();
 
         // Check if the player is on the ground
         bool previousGrounded = isGrounded;
@@ -52,23 +53,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
             UnityEngine.Debug.Log("Is Grounded: " + isGrounded);
         }
 
-        // Check for jump input (space bar)
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            UnityEngine.Debug.Log("UpArrow key pressed");
-            jump();
-        }
-
         //Resets doubleJump
         if (isGrounded && dJump)
         {
             dJumpCoolDown = 1;
         }
-    }
-
-    void FixedUpdate()
-    {
-
     }
 
     void OnDrawGizmos()
@@ -98,18 +87,20 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Makes the player jumps into air
     void jump()
     {
-        if (isGrounded || dJumpCoolDown > 0)
+        if (User_Input.instance.controls.Jumping.Jump.WasPressedThisFrame())
         {
-            dJumpCoolDown--;
-            UnityEngine.Debug.Log("Attempting to jump");
-            rb.velocity = new Vector2(rb.velocity.x * moveSpeed * Time.deltaTime, jumpForce);
-            UnityEngine.Debug.Log("Jump triggered with velocity: " + rb.velocity);
-            //Spawning double jump particles
-            if (dJump && dJumpCoolDown == 0 && !isGrounded)
+            if (isGrounded || dJumpCoolDown > 0)
             {
-                jumpDustInst = Instantiate(jumpDust, transform.position, Quaternion.identity);
+                dJumpCoolDown--;
+                rb.velocity = new Vector2(rb.velocity.x * moveSpeed * Time.deltaTime, jumpForce);
+                //Spawning double jump particles
+                if (dJump && dJumpCoolDown == 0 && !isGrounded)
+                {
+                    jumpDustInst = Instantiate(jumpDust, transform.position, Quaternion.identity);
+                }
             }
         }
+
     }
 }
 

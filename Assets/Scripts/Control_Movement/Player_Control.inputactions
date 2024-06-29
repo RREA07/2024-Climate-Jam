@@ -72,6 +72,90 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Attacking",
+            "id": "af87f08e-5d76-46b6-8184-9ecd09fc8041",
+            "actions": [
+                {
+                    "name": "Melee",
+                    "type": "Button",
+                    "id": "9b77774e-9b0d-4412-9422-196b8c985d74",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "badbea19-ce02-43c0-b625-51b748f193f2",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Melee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Jumping",
+            "id": "1992d0af-ed0b-44fc-94f6-09f68f2535fe",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "PassThrough",
+                    "id": "2ed04685-7009-40e6-a8a9-4319421cbddd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6ddffe59-b2ed-4739-b588-fc1cb79ecc83",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Dashing",
+            "id": "d954bde1-4e72-43cb-b3f8-444cc05b3222",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "efa922bd-008d-4226-abe9-006f45f71de6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "99487e3e-e900-4a17-aae2-60b0d1d4b81a",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
