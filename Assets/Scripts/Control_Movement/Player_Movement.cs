@@ -101,7 +101,7 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Melee"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""9b77774e-9b0d-4412-9422-196b8c985d74"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -113,10 +113,10 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""badbea19-ce02-43c0-b625-51b748f193f2"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard"",
                     ""action"": ""Melee"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -156,8 +156,8 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
             ""id"": ""d954bde1-4e72-43cb-b3f8-444cc05b3222"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
+                    ""name"": ""Dash"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""efa922bd-008d-4226-abe9-006f45f71de6"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -173,7 +173,7 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -205,7 +205,7 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
         m_Jumping_Jump = m_Jumping.FindAction("Jump", throwIfNotFound: true);
         // Dashing
         m_Dashing = asset.FindActionMap("Dashing", throwIfNotFound: true);
-        m_Dashing_Newaction = m_Dashing.FindAction("New action", throwIfNotFound: true);
+        m_Dashing_Dash = m_Dashing.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -405,12 +405,12 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
     // Dashing
     private readonly InputActionMap m_Dashing;
     private List<IDashingActions> m_DashingActionsCallbackInterfaces = new List<IDashingActions>();
-    private readonly InputAction m_Dashing_Newaction;
+    private readonly InputAction m_Dashing_Dash;
     public struct DashingActions
     {
         private @Player_Control m_Wrapper;
         public DashingActions(@Player_Control wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Dashing_Newaction;
+        public InputAction @Dash => m_Wrapper.m_Dashing_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Dashing; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -420,16 +420,16 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_DashingActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_DashingActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IDashingActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IDashingActions instance)
@@ -470,6 +470,6 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
     }
     public interface IDashingActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

@@ -8,6 +8,12 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public float jumpForce = 12f;
     public float handling = 0.1f;
 
+    // Attck and combates
+    private RaycastHit2D[] hit;
+    [SerializeField] private Transform attackTrans;
+    [SerializeField] private float attackRange;
+    [SerializeField] private LayerMask attackableLayer;
+    [SerializeField] private float attackPower;
 
     // Internal variables
     private Rigidbody2D rb;
@@ -28,11 +34,18 @@ public class Player_Controller_Placeholder : MonoBehaviour
 
     void Start()
     {
+        // Makes cursor invisible
+        Cursor.visible = false;
+
         // Get the Rigidbody2D component attached to the player GameObject
         rb = GetComponent<Rigidbody2D>();
 
         //Enables double jump
         dJump = true;
+
+        //Sets attack range and power
+        attackRange = 1.5f;
+        attackPower = 1.0f;
     }
 
     void Update()
@@ -43,15 +56,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
         //Movement
         move();
         jump();
+        attack(attackPower);
 
         // Check if the player is on the ground
         bool previousGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-
-        if (isGrounded != previousGrounded)
-        {
-            UnityEngine.Debug.Log("Is Grounded: " + isGrounded);
-        }
 
         //Resets doubleJump
         if (isGrounded && dJump)
@@ -101,6 +110,34 @@ public class Player_Controller_Placeholder : MonoBehaviour
             }
         }
 
+    }
+
+    private Transform GetTransform()
+    {
+        return transform;
+    }
+
+    //Player attacks
+    void attack(float hitPoints)
+    {
+        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame())
+        {
+            hit = Physics2D.CircleCastAll(attackTrans.position, attackRange, transform.right, 0f, attackableLayer);
+            Debug.Log("Attacked");
+            for (int i = 0; i < hit.Length; i++)
+            {
+                Damage damage = hit[i].collider.gameObject.GetComponent<Damage>();
+                if (damage != null)
+                {
+                    damage.takeDamage(hitPoints);
+                }
+            }
+        }
+    }
+    //Visualizing attack
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attackTrans.position, attackRange);
     }
 }
 
