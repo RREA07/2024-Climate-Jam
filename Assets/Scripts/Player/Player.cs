@@ -34,6 +34,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
 
     void Start()
     {
+        // Makes cursor invisible
+        Cursor.visible = false;
+
         // Get the Rigidbody2D component attached to the player GameObject
         rb = GetComponent<Rigidbody2D>();
 

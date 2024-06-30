@@ -30,19 +30,13 @@ public class Enemy_Basic : MonoBehaviour, Damage
         //Enemy Ground Check
         bool previousGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-        OnDrawGizmos();
-    }
-    void OnDrawGizmos()
-    {
-        // Draw ground check sphere in the editor
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
     }
 
     //Taking damge from player
     public void takeDamage(float hitPoints)
     {
         currentHealth -= hitPoints;
+        Debug.Log("Got hit, current health is : " + currentHealth);
         if (currentHealth <= 0)
         {
             defeat();
