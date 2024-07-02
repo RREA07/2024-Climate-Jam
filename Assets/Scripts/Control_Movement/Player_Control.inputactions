@@ -130,13 +130,13 @@
             ]
         },
         {
-            "name": "Dashing",
-            "id": "d954bde1-4e72-43cb-b3f8-444cc05b3222",
+            "name": "Pausing",
+            "id": "714a810a-a2cd-4f61-9de2-599320db476e",
             "actions": [
                 {
-                    "name": "Dash",
+                    "name": "Pause",
                     "type": "PassThrough",
-                    "id": "efa922bd-008d-4226-abe9-006f45f71de6",
+                    "id": "4c59423a-c8bb-424d-ac77-c498040579de",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -146,12 +146,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "99487e3e-e900-4a17-aae2-60b0d1d4b81a",
-                    "path": "",
+                    "id": "5825e152-6b0a-4ea6-bac0-e9525d7cf025",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Dash",
+                    "groups": "Keyboard",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

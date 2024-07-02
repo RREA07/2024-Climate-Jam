@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class Player_Controller_Placeholder : MonoBehaviour
 {
+    #region Variables
     // Movement and jump settings adjustable in the inspector
     [Header("Movement Settings")]
     public float moveSpeed = 7f;
     public float jumpForce = 12f;
     public float handling = 0.1f;
+
+    // Health and taking damage
+    [SerializeField] private int playerHealth = 3;
 
     // Attck and combates
     private RaycastHit2D[] hit;
@@ -21,6 +25,8 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private float moveInput;
     private ParticleSystem jumpDustInst;
     [SerializeField] private ParticleSystem jumpDust;
+    private LogicManager logicManager;
+
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -30,10 +36,16 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Upgrades
     public bool dJump;
     private int dJumpCoolDown = 0;
+    #endregion
 
-
+    #region Updates
     void Start()
     {
+        //Disable Game Over screen
+        logicManager = GameObject.FindGameObjectWithTag("LogicManager").GetComponent<LogicManager>();
+        logicManager.gameOverScreen.SetActive(false);
+        logicManager.gamePauseMenu.SetActive(false);
+
         // Makes cursor invisible
         Cursor.visible = false;
 
@@ -58,6 +70,12 @@ public class Player_Controller_Placeholder : MonoBehaviour
         jump();
         attack(attackPower);
 
+        // Pausing and un-pausing the game
+        if (User_Input.instance.controls.Pausing.Pause.WasPressedThisFrame())
+        {
+            logicManager.gamePaused();
+        }
+
         // Check if the player is on the ground
         bool previousGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
@@ -68,14 +86,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
             dJumpCoolDown = 1;
         }
     }
+    #endregion
 
-    void OnDrawGizmos()
-    {
-        // Draw ground check sphere in the editor
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
-    }
-
+    #region Movements
     //Makes player move left and right
     void move()
     {
@@ -111,12 +124,19 @@ public class Player_Controller_Placeholder : MonoBehaviour
         }
 
     }
+    void OnDrawGizmos()
+    {
+        // Draw ground check sphere in the editor
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
+    }
 
     private Transform GetTransform()
     {
         return transform;
     }
-
+    #endregion
+    #region Combat
     //Player attacks
     void attack(float hitPoints)
     {
@@ -139,5 +159,12 @@ public class Player_Controller_Placeholder : MonoBehaviour
     {
         Gizmos.DrawWireSphere(attackTrans.position, attackRange);
     }
+
+    //Take damage script
+    public void takeDamage(int damagePoint)
+    {
+
+    }
+    #endregion
 }
 

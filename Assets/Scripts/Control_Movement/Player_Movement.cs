@@ -152,13 +152,13 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Dashing"",
-            ""id"": ""d954bde1-4e72-43cb-b3f8-444cc05b3222"",
+            ""name"": ""Pausing"",
+            ""id"": ""714a810a-a2cd-4f61-9de2-599320db476e"",
             ""actions"": [
                 {
-                    ""name"": ""Dash"",
+                    ""name"": ""Pause"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""efa922bd-008d-4226-abe9-006f45f71de6"",
+                    ""id"": ""4c59423a-c8bb-424d-ac77-c498040579de"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -168,12 +168,12 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""99487e3e-e900-4a17-aae2-60b0d1d4b81a"",
-                    ""path"": """",
+                    ""id"": ""5825e152-6b0a-4ea6-bac0-e9525d7cf025"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dash"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -203,9 +203,9 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
         // Jumping
         m_Jumping = asset.FindActionMap("Jumping", throwIfNotFound: true);
         m_Jumping_Jump = m_Jumping.FindAction("Jump", throwIfNotFound: true);
-        // Dashing
-        m_Dashing = asset.FindActionMap("Dashing", throwIfNotFound: true);
-        m_Dashing_Dash = m_Dashing.FindAction("Dash", throwIfNotFound: true);
+        // Pausing
+        m_Pausing = asset.FindActionMap("Pausing", throwIfNotFound: true);
+        m_Pausing_Pause = m_Pausing.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -402,51 +402,51 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
     }
     public JumpingActions @Jumping => new JumpingActions(this);
 
-    // Dashing
-    private readonly InputActionMap m_Dashing;
-    private List<IDashingActions> m_DashingActionsCallbackInterfaces = new List<IDashingActions>();
-    private readonly InputAction m_Dashing_Dash;
-    public struct DashingActions
+    // Pausing
+    private readonly InputActionMap m_Pausing;
+    private List<IPausingActions> m_PausingActionsCallbackInterfaces = new List<IPausingActions>();
+    private readonly InputAction m_Pausing_Pause;
+    public struct PausingActions
     {
         private @Player_Control m_Wrapper;
-        public DashingActions(@Player_Control wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Dash => m_Wrapper.m_Dashing_Dash;
-        public InputActionMap Get() { return m_Wrapper.m_Dashing; }
+        public PausingActions(@Player_Control wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pause => m_Wrapper.m_Pausing_Pause;
+        public InputActionMap Get() { return m_Wrapper.m_Pausing; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(DashingActions set) { return set.Get(); }
-        public void AddCallbacks(IDashingActions instance)
+        public static implicit operator InputActionMap(PausingActions set) { return set.Get(); }
+        public void AddCallbacks(IPausingActions instance)
         {
-            if (instance == null || m_Wrapper.m_DashingActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_DashingActionsCallbackInterfaces.Add(instance);
-            @Dash.started += instance.OnDash;
-            @Dash.performed += instance.OnDash;
-            @Dash.canceled += instance.OnDash;
+            if (instance == null || m_Wrapper.m_PausingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PausingActionsCallbackInterfaces.Add(instance);
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
-        private void UnregisterCallbacks(IDashingActions instance)
+        private void UnregisterCallbacks(IPausingActions instance)
         {
-            @Dash.started -= instance.OnDash;
-            @Dash.performed -= instance.OnDash;
-            @Dash.canceled -= instance.OnDash;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
-        public void RemoveCallbacks(IDashingActions instance)
+        public void RemoveCallbacks(IPausingActions instance)
         {
-            if (m_Wrapper.m_DashingActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_PausingActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IDashingActions instance)
+        public void SetCallbacks(IPausingActions instance)
         {
-            foreach (var item in m_Wrapper.m_DashingActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_PausingActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_DashingActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_PausingActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public DashingActions @Dashing => new DashingActions(this);
+    public PausingActions @Pausing => new PausingActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -468,8 +468,8 @@ public partial class @Player_Control: IInputActionCollection2, IDisposable
     {
         void OnJump(InputAction.CallbackContext context);
     }
-    public interface IDashingActions
+    public interface IPausingActions
     {
-        void OnDash(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }
