@@ -8,6 +8,9 @@ TagManager:
   - GroundTile
   - AudioManager
   - LogicManager
+  - DamageZone
+  - SafeZone
+  - Enemy
   layers:
   - Default
   - TransparentFX
