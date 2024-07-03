@@ -10,7 +10,10 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public float handling = 0.1f;
 
     // Health and taking damage
-    [SerializeField] private int playerHealth = 3;
+    [SerializeField] private int playerHealth;
+
+    // Stored location for respawning
+    private Transform currentPosition;
 
     // Attck and combates
     private RaycastHit2D[] hit;
@@ -26,7 +29,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private ParticleSystem jumpDustInst;
     [SerializeField] private ParticleSystem jumpDust;
     private LogicManager logicManager;
-
+    private SoundFXManager soundFXManager;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -43,6 +46,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     {
         //Disable Game Over screen
         logicManager = GameObject.FindGameObjectWithTag("LogicManager").GetComponent<LogicManager>();
+        soundFXManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<SoundFXManager>();
         logicManager.gameOverScreen.SetActive(false);
         logicManager.gamePauseMenu.SetActive(false);
 
@@ -58,6 +62,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
         //Sets attack range and power
         attackRange = 1.5f;
         attackPower = 1.0f;
+
+        //Sets starting health
+        playerHealth = 4;
     }
 
     void Update()
@@ -119,6 +126,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
                 if (dJump && dJumpCoolDown == 0 && !isGrounded)
                 {
                     jumpDustInst = Instantiate(jumpDust, transform.position, Quaternion.identity);
+                    soundFXManager.playSFX(soundFXManager.doubleJump);
+                }
+                else
+                {
+                    soundFXManager.playSFX(soundFXManager.playerJump);
                 }
             }
         }
@@ -144,6 +156,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
         {
             hit = Physics2D.CircleCastAll(attackTrans.position, attackRange, transform.right, 0f, attackableLayer);
             Debug.Log("Attacked");
+            soundFXManager.playSFX(soundFXManager.playerAttack);
             for (int i = 0; i < hit.Length; i++)
             {
                 Damage damage = hit[i].collider.gameObject.GetComponent<Damage>();
@@ -160,11 +173,45 @@ public class Player_Controller_Placeholder : MonoBehaviour
         Gizmos.DrawWireSphere(attackTrans.position, attackRange);
     }
 
-    //Take damage script
-    public void takeDamage(int damagePoint)
+    //Falls off
+    private void fallsOff()
     {
+        takeDamage();
+        transform.position = currentPosition.position;
+    }
 
+    //Take damage script
+    public void takeDamage()
+    {
+        soundFXManager.playSFX(soundFXManager.playerLooseHealth);
+        playerHealth--;
+        if (playerHealth <= 0)
+        {
+            playerDies();
+        }
+    }
+
+    //When player health deplets
+    public void playerDies()
+    {
+        logicManager.gameOver();
     }
     #endregion
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.tag == "SafeZone")
+        {
+            // Saves location
+            Debug.Log("Touched Save");
+            currentPosition = collision.transform;
+        }
+
+        if (collision.transform.tag == "DamageZone")
+        {
+            // Falling off
+            Debug.Log("Touched DamageZone");
+            fallsOff();
+        }
+    }
 }
 

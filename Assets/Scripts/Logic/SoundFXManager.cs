@@ -6,9 +6,9 @@ public class SoundFXManager : MonoBehaviour
     [SerializeField] AudioSource SFXsource;
 
     #region Player Variables
-    public AudioClip jump;
-    public AudioClip dJump;
-    public AudioClip attack;
+    public AudioClip playerJump;
+    public AudioClip doubleJump;
+    public AudioClip playerAttack;
     public AudioClip playerLooseHealth;
     #endregion
     #region Enemy Variables

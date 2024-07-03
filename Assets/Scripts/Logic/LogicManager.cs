@@ -18,7 +18,7 @@ public class LogicManager : MonoBehaviour
     {
         gameOverScreen.SetActive(true);
         Cursor.visible = true;
-        soundFXManager.playSFX(soundFXManager.gameOver);
+        //soundFXManager.playSFX(soundFXManager.gameOver);
         int milliseconds = 500;
         Thread.Sleep(milliseconds);
         soundFXManager.stopSFX();
@@ -43,4 +43,5 @@ public class LogicManager : MonoBehaviour
         SceneManager.LoadSceneAsync(0);
         Time.timeScale = 1.0f;
     }
+
 }
