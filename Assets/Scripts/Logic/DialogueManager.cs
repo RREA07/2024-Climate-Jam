@@ -3,16 +3,57 @@ using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
-    private Queue<string> sentences;
-    // Start is called before the first frame update
-    void Start()
+    private static DialogueManager dm;
+
+    private void Awake()
     {
-        sentences = new Queue<string>();
+        if (dm == null)
+        {
+            dm = this;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public static DialogueManager GetDialogueManager()
     {
+        return dm;
+    }
 
+    public List<Transform> panels = new List<Transform>();
+
+    private void Start()
+    {
+        foreach (Transform item in panels)
+        {
+            item.gameObject.SetActive(false);
+        }
+    }
+
+    public GameObject openPanel(string panelName)
+    {
+        foreach (Transform item in panels)
+        {
+            if (item.name == panelName)
+            {
+                GameObject activeDialogue = item.gameObject;
+                activeDialogue.SetActive(true);
+                return activeDialogue;
+            }
+        }
+        Debug.Log("Couldn't find dialogue panel.");
+        return null;
+    }
+
+    public void closePanel(string panelName)
+    {
+        foreach (Transform item in panels)
+        {
+            if (item.name == panelName)
+            {
+                GameObject deactiveDialogue = item.gameObject;
+                deactiveDialogue.SetActive(false);
+                return;
+            }
+        }
+        Debug.Log("Couldn't find dialogue panel.");
     }
 }
