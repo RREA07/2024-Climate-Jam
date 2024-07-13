@@ -3,24 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - PlayerCharacter
-  - GroundTile
-  - AudioManager
-  - LogicManager
-  - DamageZone
-  - SafeZone
-  - Enemy
-  - DeadZone
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
-  - Player
-  - Attackable
+  - 
+  - 
   - 
   - 
   - 
