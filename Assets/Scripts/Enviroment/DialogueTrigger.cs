@@ -5,6 +5,7 @@ public class Enviroment : MonoBehaviour
 {
     public Dialogues dialogues;
     [Header("Dialogue Contents")]
+    public string npcName;
     public string[] npcSentences;
     private bool passedSceneOne;
     private bool passedSceneTwo;
@@ -53,10 +54,32 @@ public class Enviroment : MonoBehaviour
                 currentPanelName = "npcPanel";
                 index++;
             }
-            speakerText.text = npcSentences[index];
             switchPanel(currentPanelName);
+            speakerText.text = npcSentences[index];
             index++;
             firstEncounter = false;
+        }
+        else
+        {
+            if (index >= npcSentences.Length)
+            {
+                DialogueManager.GetDialogueManager().closePanel(currentOpenPanel);
+                firstEncounter = true;
+                index = 0;
+                return;
+            }
+            if (npcSentences[index].Length == 1 && npcSentences[index] == "P")
+            {
+                currentPanelName = "playerPanel";
+                index++;
+            }
+            if (npcSentences[index].Length == 1 && npcSentences[index] == "N")
+            {
+                currentPanelName = "npcPanel";
+                index++;
+            }
+            speakerText.text = npcSentences[index];
+            index++;
         }
     }
 
@@ -67,7 +90,24 @@ public class Enviroment : MonoBehaviour
         GameObject go = DialogueManager.GetDialogueManager().openPanel(panelName);
         foreach (Transform item in go.transform)
         {
+            if (item.name == "speakerName")
+            {
+                this.speakerName = item.GetComponent<TMP_Text>();
+            }
+            else if (item.name == "speakerText")
+            {
+                this.speakerText = item.GetComponent<TMP_Text>();
+            }
+            if (item.name == "npcPanel")
+            {
+                setDialoguePanel(this.speakerName);
+            }
             currentOpenPanel = panelName;
         }
+    }
+
+    private void setDialoguePanel(TMP_Text name)
+    {
+        name.text = this.npcName;
     }
 }

@@ -15,6 +15,7 @@ public class Enemy_Basic : MonoBehaviour, Damage
     public GameObject pointB;
     private Animator animator;
     private Transform currentPoint;
+    private SoundFXManager soundFXManager;
     public float speed = 2f;
 
     // Ground check variables
@@ -28,6 +29,7 @@ public class Enemy_Basic : MonoBehaviour, Damage
         currentHealth = 3f;
         rb = GetComponent<Rigidbody2D>();
         currentPoint = pointB.transform;
+        soundFXManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<SoundFXManager>();
     }
 
     // Update is called once per frame
@@ -62,6 +64,7 @@ public class Enemy_Basic : MonoBehaviour, Damage
     public void takeDamage(float hitPoints)
     {
         currentHealth -= hitPoints;
+        soundFXManager.playSFX(soundFXManager.enemyLooseHealth);
         Debug.Log("Got hit, current health is : " + currentHealth);
         if (currentHealth <= 0)
         {
@@ -69,15 +72,10 @@ public class Enemy_Basic : MonoBehaviour, Damage
         }
     }
 
-    //Attacking the player
-    public void attackPlayer()
-    {
-
-    }
-
     //Upon Defeat
     public void defeat()
     {
+        soundFXManager.playSFX(soundFXManager.enemyDies);
         Destroy(gameObject);
     }
 

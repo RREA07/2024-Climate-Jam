@@ -30,6 +30,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     [SerializeField] private ParticleSystem jumpDust;
     private LogicManager logicManager;
     private SoundFXManager soundFXManager;
+    private Animator ani;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -53,8 +54,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
         // Makes cursor invisible
         Cursor.visible = false;
 
-        // Get the Rigidbody2D component attached to the player GameObject
+        // Get components 
         rb = GetComponent<Rigidbody2D>();
+        ani = GetComponent<Animator>();
 
         //Enables double jump
         dJump = true;
@@ -76,6 +78,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
         move();
         jump();
         attack(attackPower);
+        ani.SetBool("Run", moveInput != 0);
 
         // Pausing and un-pausing the game
         if (User_Input.instance.controls.Pausing.Pause.WasPressedThisFrame())
@@ -92,6 +95,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
         {
             dJumpCoolDown = 1;
         }
+
     }
     #endregion
 
@@ -211,6 +215,13 @@ public class Player_Controller_Placeholder : MonoBehaviour
             // Falling off
             Debug.Log("Touched DamageZone");
             fallsOff();
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Enemy")
+        {
+            takeDamage();
         }
     }
 }
