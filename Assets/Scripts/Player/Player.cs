@@ -25,6 +25,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     // Internal variables
     private Rigidbody2D rb;
     private bool isGrounded;
+    private bool jumped;
     private float moveInput;
     private ParticleSystem jumpDustInst;
     [SerializeField] private ParticleSystem jumpDust;
@@ -78,6 +79,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
         move();
         jump();
         attack(attackPower);
+        ani.SetBool("Jump", jumped);
         ani.SetBool("Run", moveInput != 0);
 
         // Pausing and un-pausing the game
@@ -90,12 +92,21 @@ public class Player_Controller_Placeholder : MonoBehaviour
         bool previousGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
+        if (!isGrounded)
+        {
+            ani.SetBool("InAir", true);
+        }
+        else
+        {
+            ani.SetBool("InAir", false);
+        }
+
         //Resets doubleJump
         if (isGrounded && dJump)
         {
             dJumpCoolDown = 1;
         }
-
+        jumped = false;
     }
     #endregion
 
@@ -134,11 +145,12 @@ public class Player_Controller_Placeholder : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log(dJumpCoolDown);
                     soundFXManager.playSFX(soundFXManager.playerJump);
                 }
+                jumped = true;
             }
         }
-
     }
     void OnDrawGizmos()
     {
