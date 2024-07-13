@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Enviroment : MonoBehaviour
 {
     [Header("Dialogue Contents")]
@@ -17,15 +17,16 @@ public class Enviroment : MonoBehaviour
         //triggers cutscene
         if (collision.CompareTag("Player"))
         {
-            if (encounter == 0)
+            SceneManager.LoadScene("End Menu");
+            /*if (encounter == 0)
             {
-
+                
                 encounter++;
             }
             else
             {
 
-            }
+            }*/
         }
     }
 }

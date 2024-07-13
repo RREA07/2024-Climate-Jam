@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player_Controller_Placeholder : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public float handling = 0.1f;
 
     // Health and taking damage
-    [SerializeField] private int playerHealth;
+    [SerializeField] private float playerHealth;
+    public Image currentHealthBar;
 
     // Stored location for respawning
     private Transform currentPosition;
@@ -69,11 +71,13 @@ public class Player_Controller_Placeholder : MonoBehaviour
         attackPower = 1.0f;
 
         //Sets starting health
-        playerHealth = 4;
+        playerHealth = 4f;
     }
 
     void Update()
     {
+        //Health
+        currentHealthBar.fillAmount = playerHealth * 0.25f;
         // Get horizontal input (A/D keys or Left/Right arrow keys)
         moveInput = User_Input.instance.moveInput.x;
 
@@ -219,7 +223,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     #endregion
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.tag == "SafeZone")
+        /*if (collision.transform.tag == "SafeZone")
         {
             // Saves location
             Debug.Log("Touched Save");
@@ -231,6 +235,11 @@ public class Player_Controller_Placeholder : MonoBehaviour
             // Falling off
             Debug.Log("Touched DamageZone");
             fallsOff();
+        }*/
+
+        if (collision.transform.tag == "DeadZone")
+        {
+            playerDies();
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)

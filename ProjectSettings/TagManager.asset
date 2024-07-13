@@ -11,6 +11,7 @@ TagManager:
   - DamageZone
   - SafeZone
   - Enemy
+  - DeadZone
   layers:
   - Default
   - TransparentFX

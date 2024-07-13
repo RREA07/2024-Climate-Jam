@@ -11,7 +11,7 @@ public class SceneChanger_Intro : MonoBehaviour
         changeTime -= Time.deltaTime;
         if (changeTime <= 0)
         {
-            SceneManager.LoadSceneAsync(1);
+            SceneManager.LoadScene("Forest_lvl_Latest");
         }
 
     }
