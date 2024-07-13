@@ -13,7 +13,6 @@ public class Enemy_Basic : MonoBehaviour, Damage
     private bool isGrounded;
     public GameObject pointA;
     public GameObject pointB;
-    private Animator animator;
     private Transform currentPoint;
     private SoundFXManager soundFXManager;
     public float speed = 2f;
@@ -43,10 +42,12 @@ public class Enemy_Basic : MonoBehaviour, Damage
         if (currentPoint == pointB.transform)
         {
             rb.velocity = new Vector2(speed, 0);
+            transform.localScale = new Vector3(-1, 1, 1);
         }
         else
         {
             rb.velocity = new Vector2(-speed, 0);
+            transform.localScale = Vector3.one;
         }
 
         if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointB.transform)
