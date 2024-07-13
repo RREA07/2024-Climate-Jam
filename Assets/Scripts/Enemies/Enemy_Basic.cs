@@ -66,7 +66,6 @@ public class Enemy_Basic : MonoBehaviour, Damage
     {
         currentHealth -= hitPoints;
         soundFXManager.playSFX(soundFXManager.enemyLooseHealth);
-        Debug.Log("Got hit, current health is : " + currentHealth);
         if (currentHealth <= 0)
         {
             defeat();

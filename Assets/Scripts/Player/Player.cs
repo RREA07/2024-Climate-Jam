@@ -32,6 +32,8 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private LogicManager logicManager;
     private SoundFXManager soundFXManager;
     private Animator ani;
+    private float attackCoolDown = 0.4f;
+    private float attackCoolDownCounter = 0f;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -78,10 +80,15 @@ public class Player_Controller_Placeholder : MonoBehaviour
         //Movement
         move();
         jump();
-        attack(attackPower);
         ani.SetBool("Jump", jumped);
         ani.SetBool("Run", moveInput != 0);
+        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown)
+        {
+            attackCoolDownCounter = 0f;
+            attack(attackPower);
+        }
 
+        attackCoolDownCounter += Time.deltaTime;
         // Pausing and un-pausing the game
         if (User_Input.instance.controls.Pausing.Pause.WasPressedThisFrame())
         {
@@ -145,7 +152,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(dJumpCoolDown);
                     soundFXManager.playSFX(soundFXManager.playerJump);
                 }
                 jumped = true;
@@ -168,18 +174,16 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Player attacks
     void attack(float hitPoints)
     {
-        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame())
+        ani.SetTrigger("Attack");
+        hit = Physics2D.CircleCastAll(attackTrans.position, attackRange, transform.right, 0f, attackableLayer);
+        Debug.Log("Attacked");
+        soundFXManager.playSFX(soundFXManager.playerAttack);
+        for (int i = 0; i < hit.Length; i++)
         {
-            hit = Physics2D.CircleCastAll(attackTrans.position, attackRange, transform.right, 0f, attackableLayer);
-            Debug.Log("Attacked");
-            soundFXManager.playSFX(soundFXManager.playerAttack);
-            for (int i = 0; i < hit.Length; i++)
+            Damage damage = hit[i].collider.gameObject.GetComponent<Damage>();
+            if (damage != null)
             {
-                Damage damage = hit[i].collider.gameObject.GetComponent<Damage>();
-                if (damage != null)
-                {
-                    damage.takeDamage(hitPoints);
-                }
+                damage.takeDamage(hitPoints);
             }
         }
     }
