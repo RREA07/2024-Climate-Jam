@@ -15,7 +15,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     public Image currentHealthBar;
 
     // Stored location for respawning
-    private Transform currentPosition;
+    private Vector3 savedPosition;
 
     // Attck and combates
     private RaycastHit2D[] hit;
@@ -201,7 +201,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private void fallsOff()
     {
         takeDamage();
-        transform.position = currentPosition.position;
+        transform.position = savedPosition;
     }
 
     //Take damage script
@@ -223,23 +223,19 @@ public class Player_Controller_Placeholder : MonoBehaviour
     #endregion
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        /*if (collision.transform.tag == "SafeZone")
+        if (collision.transform.tag == "SafeZone")
         {
             // Saves location
             Debug.Log("Touched Save");
-            currentPosition = collision.transform;
+            savedPosition = collision.transform.position;
         }
 
         if (collision.transform.tag == "DamageZone")
         {
             // Falling off
             Debug.Log("Touched DamageZone");
+            Debug.Log(savedPosition.ToString());
             fallsOff();
-        }*/
-
-        if (collision.transform.tag == "DeadZone")
-        {
-            playerDies();
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)

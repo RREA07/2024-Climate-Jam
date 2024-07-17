@@ -4,14 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PlayerCharacter
   - GroundTile
   - AudioManager
   - LogicManager
   - DamageZone
   - SafeZone
   - Enemy
-  - DeadZone
+  - NPC
   layers:
   - Default
   - TransparentFX
