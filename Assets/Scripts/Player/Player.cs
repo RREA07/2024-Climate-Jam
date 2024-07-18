@@ -16,6 +16,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
 
     // Stored location for respawning
     private Vector3 savedPosition;
+    private Vector3 checkPointPosition;
 
     // Attck and combates
     private RaycastHit2D[] hit;
@@ -36,6 +37,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private Animator ani;
     private float attackCoolDown = 0.4f;
     private float attackCoolDownCounter = 0f;
+    private float iframe;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -45,6 +47,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Upgrades
     public bool dJump;
     private int dJumpCoolDown = 0;
+    public bool canAttack;
     #endregion
 
     #region Updates
@@ -63,8 +66,9 @@ public class Player_Controller_Placeholder : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
 
-        //Enables double jump
+        //Enables double jump&attack
         dJump = true;
+        canAttack = true;
 
         //Sets attack range and power
         attackRange = 1.5f;
@@ -86,13 +90,19 @@ public class Player_Controller_Placeholder : MonoBehaviour
         jump();
         ani.SetBool("Jump", jumped);
         ani.SetBool("Run", moveInput != 0);
-        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown)
+        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown && canAttack)
         {
             attackCoolDownCounter = 0f;
             attack(attackPower);
         }
 
         attackCoolDownCounter += Time.deltaTime;
+
+        if (iframe > 0)
+        {
+            iframe -= Time.deltaTime;
+        }
+
         // Pausing and un-pausing the game
         if (User_Input.instance.controls.Pausing.Pause.WasPressedThisFrame())
         {
@@ -180,7 +190,6 @@ public class Player_Controller_Placeholder : MonoBehaviour
     {
         ani.SetTrigger("Attack");
         hit = Physics2D.CircleCastAll(attackTrans.position, attackRange, transform.right, 0f, attackableLayer);
-        Debug.Log("Attacked");
         soundFXManager.playSFX(soundFXManager.playerAttack);
         for (int i = 0; i < hit.Length; i++)
         {
@@ -207,18 +216,29 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Take damage script
     public void takeDamage()
     {
-        soundFXManager.playSFX(soundFXManager.playerLooseHealth);
-        playerHealth--;
-        if (playerHealth <= 0)
+        if (iframe <= 0)
         {
-            playerDies();
+            ani.SetTrigger("Hurt");
+            soundFXManager.playSFX(soundFXManager.playerLooseHealth);
+            playerHealth--;
+            if (playerHealth <= 0)
+            {
+                playerDies();
+            }
         }
+        iframe = 0.8f;
     }
 
     //When player health deplets
     public void playerDies()
     {
         logicManager.gameOver();
+    }
+
+    public void reloadPlayerStats()
+    {
+        transform.position = checkPointPosition;
+        playerHealth = 4;
     }
     #endregion
     private void OnTriggerEnter2D(Collider2D collision)
@@ -233,15 +253,19 @@ public class Player_Controller_Placeholder : MonoBehaviour
         if (collision.transform.tag == "DamageZone")
         {
             // Falling off
-            Debug.Log("Touched DamageZone");
-            Debug.Log(savedPosition.ToString());
             fallsOff();
+        }
+
+        if (collision.transform.tag == "CheckPoint")
+        {
+            checkPointPosition = collision.transform.position;
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.tag == "Enemy")
         {
+            collision.gameObject.GetComponent<HitPause>().stopTime(0.05f, 10, 0.1f);
             takeDamage();
         }
     }
