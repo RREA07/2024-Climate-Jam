@@ -1,4 +1,3 @@
-using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +6,7 @@ public class LogicManager : MonoBehaviour
     public GameObject gameOverScreen;
     public GameObject gamePauseMenu;
     private SoundFXManager soundFXManager;
+    public GameObject player;
 
     void Start()
     {
@@ -19,8 +19,7 @@ public class LogicManager : MonoBehaviour
         gameOverScreen.SetActive(true);
         Cursor.visible = true;
         //soundFXManager.playSFX(soundFXManager.gameOver);
-        int milliseconds = 500;
-        Thread.Sleep(milliseconds);
+        Time.timeScale = 0f;
         soundFXManager.stopSFX();
     }
 
@@ -36,6 +35,14 @@ public class LogicManager : MonoBehaviour
         gamePauseMenu.SetActive(false);
         Cursor.visible = false;
         Time.timeScale = 1.0f;
+    }
+
+    public void reloadCheck()
+    {
+        gameOverScreen.SetActive(false);
+        Cursor.visible = false;
+        Time.timeScale = 1.0f;
+        player.GetComponent<Player_Controller_Placeholder>().reloadPlayerStats();
     }
 
     public void returnToTitle()

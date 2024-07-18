@@ -11,7 +11,7 @@ TagManager:
   - SafeZone
   - Enemy
   - NPC
-  - DeadZone
+  - CheckPoint
   layers:
   - Default
   - TransparentFX

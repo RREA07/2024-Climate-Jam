@@ -28,6 +28,11 @@ public class SoundFXManager : MonoBehaviour
     {
         SFXsource.Pause();
     }
+
+    public void resumeSFX()
+    {
+        SFXsource.UnPause();
+    }
 }
 
 internal struct NewStruct

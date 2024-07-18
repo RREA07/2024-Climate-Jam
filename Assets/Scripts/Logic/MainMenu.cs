@@ -14,9 +14,4 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(3);
     }
-
-    public void gameReStart()
-    {
-        SceneManager.LoadScene("Forest_lvl_Latest");
-    }
 }
