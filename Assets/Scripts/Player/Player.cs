@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player_Controller_Placeholder : MonoBehaviour
+public class Player : MonoBehaviour
 {
     #region Variables
     // Movement and jump settings adjustable in the inspector
@@ -38,6 +38,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     private float attackCoolDown = 0.4f;
     private float attackCoolDownCounter = 0f;
     private float iframe;
+    public bool canMove;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -67,15 +68,17 @@ public class Player_Controller_Placeholder : MonoBehaviour
         ani = GetComponent<Animator>();
 
         //Enables double jump&attack
-        dJump = true;
-        canAttack = true;
+        dJump = false;
+        canAttack = false;
 
         //Sets attack range and power
-        attackRange = 1.5f;
+        attackRange = 1.2f;
         attackPower = 1.0f;
 
         //Sets starting health
         playerHealth = 4f;
+
+        canMove = true;
     }
 
     void Update()
@@ -90,7 +93,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
         jump();
         ani.SetBool("Jump", jumped);
         ani.SetBool("Run", moveInput != 0);
-        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown && canAttack)
+        if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown && canAttack && canMove)
         {
             attackCoolDownCounter = 0f;
             attack(attackPower);
@@ -136,7 +139,10 @@ public class Player_Controller_Placeholder : MonoBehaviour
     void move()
     {
         // Horizontal movement
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        if (canMove)
+        {
+            rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        }
 
         // Flips sprite
         if (moveInput > 0.01f)
@@ -152,7 +158,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //Makes the player jumps into air
     void jump()
     {
-        if (User_Input.instance.controls.Jumping.Jump.WasPressedThisFrame())
+        if (User_Input.instance.controls.Jumping.Jump.WasPressedThisFrame() && canMove)
         {
             if (isGrounded || dJumpCoolDown > 0)
             {
@@ -172,12 +178,13 @@ public class Player_Controller_Placeholder : MonoBehaviour
             }
         }
     }
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         // Draw ground check sphere in the editor
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
     }
+
 
     private Transform GetTransform()
     {
@@ -232,6 +239,7 @@ public class Player_Controller_Placeholder : MonoBehaviour
     //When player health deplets
     public void playerDies()
     {
+        canMove = false;
         logicManager.gameOver();
     }
 
@@ -260,12 +268,16 @@ public class Player_Controller_Placeholder : MonoBehaviour
         {
             checkPointPosition = collision.transform.position;
         }
+
+        if (collision.transform.tag == "NPC")
+        {
+            canMove = false;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<HitPause>().stopTime(0.05f, 10, 0.1f);
             takeDamage();
         }
     }

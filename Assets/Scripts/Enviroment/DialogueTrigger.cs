@@ -1,32 +1,61 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-public class Enviroment : MonoBehaviour
-{
-    [Header("Dialogue Contents")]
-    public string npcName;
-    public string[] npcSentences;
-    private int encounter;
 
+[System.Serializable]
+public class DialogueCharacter
+{
+    public string npcName;
+}
+
+[System.Serializable]
+public class DialogueLine
+{
+    public DialogueCharacter character;
+    [TextArea(3, 10)]
+    public string npcSentences;
+}
+
+[System.Serializable]
+public class Dialogue
+{
+    public List<DialogueLine> dialogueLines = new List<DialogueLine>();
+}
+public class DialogueTrigger : MonoBehaviour
+{
+    public Dialogue dialogue;
+    private int encounter;
     private void Start()
     {
         encounter = 0;
+
     }
+
+    private void Update()
+    {
+        if (DialogueManager.instance.dialogueIsActive)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+
+        if (!DialogueManager.instance.dialogueIsActive)
+        {
+            transform.localScale = Vector3.one;
+        }
+    }
+
+    public void triggerDialogue()
+    {
+        DialogueManager.instance.StartDialogue(dialogue);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Entered dialgue trigger zone");
-        //triggers cutscene
-        if (collision.CompareTag("Player"))
+        if (collision.tag == "Player")
         {
-            SceneManager.LoadScene("End Menu");
-            /*if (encounter == 0)
-            {
-                
-                encounter++;
-            }
-            else
-            {
-
-            }*/
+            Player player = collision.GetComponent<Player>();
+            player.canMove = false;
+            Cursor.visible = true;
+            triggerDialogue();
         }
     }
 }

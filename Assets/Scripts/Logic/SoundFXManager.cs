@@ -18,6 +18,7 @@ public class SoundFXManager : MonoBehaviour
     #region Environment Variables
     public AudioClip gameOver;
     public AudioClip footsteps;
+    public AudioClip speech;
     #endregion
     public void playSFX(AudioClip clip)
     {

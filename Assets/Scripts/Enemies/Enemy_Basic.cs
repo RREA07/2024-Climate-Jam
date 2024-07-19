@@ -66,6 +66,7 @@ public class Enemy_Basic : MonoBehaviour, Damage
     {
         currentHealth -= hitPoints;
         soundFXManager.playSFX(soundFXManager.enemyLooseHealth);
+        //GetComponent<HitPause>().stopTime(0.05f, 10, 0.1f);
         if (currentHealth <= 0)
         {
             defeat();
