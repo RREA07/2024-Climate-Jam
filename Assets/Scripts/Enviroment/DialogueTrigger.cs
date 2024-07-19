@@ -23,12 +23,6 @@ public class Dialogue
 public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
-    private int encounter;
-    private void Start()
-    {
-        encounter = 0;
-
-    }
 
     private void Update()
     {

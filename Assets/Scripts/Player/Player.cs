@@ -268,11 +268,6 @@ public class Player : MonoBehaviour
         {
             checkPointPosition = collision.transform.position;
         }
-
-        if (collision.transform.tag == "NPC")
-        {
-            canMove = false;
-        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
