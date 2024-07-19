@@ -23,17 +23,14 @@ public class Dialogue
 public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
+    public Animator ani;
+    public int encounters = 0;
 
     private void Update()
     {
         if (DialogueManager.instance.dialogueIsActive)
         {
             transform.localScale = new Vector3(-1, 1, 1);
-        }
-
-        if (!DialogueManager.instance.dialogueIsActive)
-        {
-            transform.localScale = Vector3.one;
         }
     }
 

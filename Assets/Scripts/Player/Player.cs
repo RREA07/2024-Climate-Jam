@@ -268,6 +268,15 @@ public class Player : MonoBehaviour
         {
             checkPointPosition = collision.transform.position;
         }
+
+        if (collision.tag == "NPC")
+        {
+            if (collision.GetComponent<DialogueTrigger>().encounters == 1)
+            {
+                canAttack = true;
+                dJump = true;
+            }
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

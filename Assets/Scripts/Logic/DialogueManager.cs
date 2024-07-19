@@ -13,6 +13,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] public bool dialogueIsActive = false;
     public float typeSpeed = 0.2f;
     public GameObject dialoguePanel;
+    public Animator ani;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +21,6 @@ public class DialogueManager : MonoBehaviour
         {
             instance = this;
         }
-
-        dialoguePanel.SetActive(false);
     }
 
     public void StartDialogue(Dialogue dialogue)
@@ -64,7 +63,7 @@ public class DialogueManager : MonoBehaviour
     void EndDialogue()
     {
         dialogueIsActive = false;
-        dialoguePanel.SetActive(false);
         Cursor.visible = false;
+        ani.SetTrigger("Leap");
     }
 }
