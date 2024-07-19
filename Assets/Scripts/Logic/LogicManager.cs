@@ -42,7 +42,7 @@ public class LogicManager : MonoBehaviour
         gameOverScreen.SetActive(false);
         Cursor.visible = false;
         Time.timeScale = 1.0f;
-        player.GetComponent<Player_Controller_Placeholder>().reloadPlayerStats();
+        player.GetComponent<Player>().reloadPlayerStats();
     }
 
     public void returnToTitle()
