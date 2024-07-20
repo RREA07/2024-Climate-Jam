@@ -166,4 +166,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue:
-    dialogueLines: []
+    dialogueLines:
+    - character:
+        npcName: Cane
+      npcSentences: Hi
+  ani: {fileID: 0}
+  encounters: 0

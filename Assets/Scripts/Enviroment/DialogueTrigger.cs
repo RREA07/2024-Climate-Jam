@@ -23,14 +23,25 @@ public class Dialogue
 public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogue;
+    public DialogueManager manager;
     public Animator ani;
     public int encounters = 0;
 
     private void Update()
     {
-        if (DialogueManager.instance.dialogueIsActive)
+
+        if (encounters == 1)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            if (manager.numDialogue == 12)
+            {
+                transform.localScale = Vector3.one;
+                ani.SetTrigger("Leap");
+            }
+        }
+
+        if (!manager.dialogueIsActive && manager.canDestroy)
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -47,6 +58,8 @@ public class DialogueTrigger : MonoBehaviour
             player.canMove = false;
             Cursor.visible = true;
             triggerDialogue();
+            transform.localScale = new Vector3(-1, 1, 1);
+            encounters++;
         }
     }
 }
