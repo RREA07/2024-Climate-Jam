@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
     private bool jumped;
     private float moveInput;
     private ParticleSystem jumpDustInst;
+    private ParticleSystem saveDustInst;
+    [SerializeField] private ParticleSystem saveDust;
     [SerializeField] private ParticleSystem jumpDust;
     private LogicManager logicManager;
     private SoundFXManager soundFXManager;
@@ -92,7 +94,7 @@ public class Player : MonoBehaviour
         move();
         jump();
         ani.SetBool("Jump", jumped);
-        ani.SetBool("Run", moveInput != 0);
+        ani.SetBool("Run", moveInput != 0 && canMove);
         if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown && canAttack && canMove)
         {
             attackCoolDownCounter = 0f;
@@ -142,16 +144,15 @@ public class Player : MonoBehaviour
         if (canMove)
         {
             rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-        }
-
-        // Flips sprite
-        if (moveInput > 0.01f)
-        {
-            transform.localScale = Vector3.one;
-        }
-        else if (moveInput < -0.01f)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
+            // Flips sprite
+            if (moveInput > 0.01f)
+            {
+                transform.localScale = Vector3.one;
+            }
+            else if (moveInput < -0.01f)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
         }
     }
 
@@ -267,6 +268,7 @@ public class Player : MonoBehaviour
         if (collision.transform.tag == "CheckPoint")
         {
             checkPointPosition = collision.transform.position;
+            saveDustInst = Instantiate(saveDust, collision.transform.position, Quaternion.identity);
         }
 
         if (collision.tag == "NPC")
