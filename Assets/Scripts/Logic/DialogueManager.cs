@@ -28,8 +28,8 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueIsActive = true;
         dialoguePanel.SetActive(true);
-        lines.Clear();
         aniChat.Play("show");
+        lines.Clear();
         foreach (DialogueLine dialogueLine in dialogue.dialogueLines)
         {
             lines.Enqueue(dialogueLine);

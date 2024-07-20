@@ -268,6 +268,7 @@ public class Player : MonoBehaviour
         if (collision.transform.tag == "CheckPoint")
         {
             checkPointPosition = collision.transform.position;
+            soundFXManager.playSFX(soundFXManager.saved);
             saveDustInst = Instantiate(saveDust, collision.transform.position, Quaternion.identity);
         }
 
