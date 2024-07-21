@@ -25,31 +25,27 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
     public DialogueManager manager;
     public Animator ani;
-    public int encounters = 0;
+    public bool passedFirst = false;
 
     private void Update()
     {
 
-        if (encounters == 1)
+        if (manager.encounters == 1)
         {
             if (manager.numDialogue == 12)
             {
-                transform.localScale = Vector3.one;
+                Debug.Log("reached leap 1");
+                transform.localScale = new Vector3(1, 1, 1);
                 ani.SetTrigger("Leap");
             }
         }
-        else if (encounters == 2)
+        else if (manager.encounters == 2)
         {
-            if (manager.numDialogue == 12)
+            if (manager.numDialogue == 14)
             {
-                transform.localScale = Vector3.one;
+                transform.localScale = new Vector3(1, 1, 1);
                 ani.SetTrigger("Leap");
             }
-        }
-
-        if (!manager.dialogueIsActive && manager.canDestroy)
-        {
-            Destroy(gameObject);
         }
     }
 
@@ -67,7 +63,7 @@ public class DialogueTrigger : MonoBehaviour
             Cursor.visible = true;
             triggerDialogue();
             transform.localScale = new Vector3(-1, 1, 1);
-            encounters++;
+            passedFirst = true;
         }
     }
 }

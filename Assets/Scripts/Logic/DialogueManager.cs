@@ -11,12 +11,16 @@ public class DialogueManager : MonoBehaviour
     private Queue<DialogueLine> lines;
     public Player player;
     [SerializeField] public bool dialogueIsActive = false;
-    public float typeSpeed = 5f;
+    public float typeSpeed = 0.03f;
     public GameObject dialoguePanel;
     public Animator aniWolf;
     public Animator aniChat;
     public int numDialogue = 0;
     public bool canDestroy;
+    public GameObject encounter1;
+    public GameObject encounter2;
+    public int encounters = 0;
+    [SerializeField] public float readingTime = 7f;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,10 +35,20 @@ public class DialogueManager : MonoBehaviour
             lines = new Queue<DialogueLine>();
             lines.Clear();
         }
+
+        encounter2.SetActive(false);
+    }
+    private void Update()
+    {
+        if (readingTime > 0)
+        {
+            readingTime -= Time.deltaTime;
+        }
     }
 
     public void StartDialogue(Dialogue dialogue)
     {
+        encounters++;
         canDestroy = false;
         numDialogue = 0;
         dialogueIsActive = true;
@@ -52,15 +66,20 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Current Line: " + lines.Count);
         if (lines.Count == 0)
         {
+            lines.Clear();
             EndDialogue();
             return;
         }
-        numDialogue++;
-        DialogueLine currentLine = lines.Dequeue();
-        characterName.text = currentLine.character.npcName;
-        SoundFXManager.playSFX(SoundFXManager.speech);
-        StopAllCoroutines();
-        StartCoroutine(typeSentences(currentLine));
+        else if (readingTime <= 0)
+        {
+            readingTime = 3f;
+            numDialogue++;
+            DialogueLine currentLine = lines.Dequeue();
+            characterName.text = currentLine.character.npcName;
+            SoundFXManager.playSFX(SoundFXManager.speech);
+            StopAllCoroutines();
+            StartCoroutine(typeSentences(currentLine));
+        }
     }
 
     IEnumerator typeSentences(DialogueLine text)
@@ -81,5 +100,22 @@ public class DialogueManager : MonoBehaviour
         player.canMove = true;
         numDialogue = 0;
         canDestroy = true;
+        destropNpc(encounters);
+    }
+
+    public void destropNpc(int encounter)
+    {
+        if (!dialogueIsActive && canDestroy)
+        {
+            if (encounter == 1)
+            {
+                Destroy(encounter1);
+                encounter2.SetActive(true);
+            }
+            else if (encounter == 2)
+            {
+                Destroy(encounter2);
+            }
+        }
     }
 }

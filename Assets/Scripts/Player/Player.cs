@@ -247,6 +247,8 @@ public class Player : MonoBehaviour
     public void reloadPlayerStats()
     {
         transform.position = checkPointPosition;
+        canMove = true;
+        dJump = true;
         playerHealth = 4;
     }
     #endregion
@@ -274,7 +276,7 @@ public class Player : MonoBehaviour
 
         if (collision.tag == "NPC")
         {
-            if (collision.GetComponent<DialogueTrigger>().encounters == 1)
+            if (collision.GetComponent<DialogueTrigger>().passedFirst)
             {
                 canAttack = true;
                 dJump = true;
