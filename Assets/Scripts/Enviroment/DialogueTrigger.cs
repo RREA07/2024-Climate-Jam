@@ -38,6 +38,14 @@ public class DialogueTrigger : MonoBehaviour
                 ani.SetTrigger("Leap");
             }
         }
+        else if (encounters == 2)
+        {
+            if (manager.numDialogue == 12)
+            {
+                transform.localScale = Vector3.one;
+                ani.SetTrigger("Leap");
+            }
+        }
 
         if (!manager.dialogueIsActive && manager.canDestroy)
         {
