@@ -25,7 +25,8 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
     public DialogueManager manager;
     public Animator ani;
-    public bool passedFirst = false;
+    public Player player;
+    //public bool passedFirst = false;
 
     private void Update()
     {
@@ -36,6 +37,8 @@ public class DialogueTrigger : MonoBehaviour
             {
                 Debug.Log("reached leap 1");
                 ani.SetTrigger("Leap");
+                player.canAttack = true;
+                player.dJump = true;
             }
         }
         else if (manager.encounters == 2)
@@ -65,7 +68,7 @@ public class DialogueTrigger : MonoBehaviour
             player.canMove = false;
             Cursor.visible = true;
             triggerDialogue();
-            passedFirst = true;
+            //passedFirst = true;
         }
     }
 }
