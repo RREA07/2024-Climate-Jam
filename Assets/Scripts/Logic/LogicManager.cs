@@ -51,4 +51,9 @@ public class LogicManager : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
+    public void goToEndScene()
+    {
+        SceneManager.LoadScene("Outro");
+    }
+
 }

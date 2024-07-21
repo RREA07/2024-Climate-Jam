@@ -19,7 +19,10 @@ public class DialogueManager : MonoBehaviour
     public bool canDestroy;
     public GameObject encounter1;
     public GameObject encounter2;
+    public GameObject encounter3;
     public int encounters = 0;
+    public bool isB4Boss = false;
+    public LogicManager LogicManager;
     [SerializeField] public float readingTime = 7f;
     // Start is called before the first frame update
     void Start()
@@ -37,6 +40,7 @@ public class DialogueManager : MonoBehaviour
         }
 
         encounter2.SetActive(false);
+        encounter3.SetActive(false);
     }
     private void Update()
     {
@@ -101,12 +105,18 @@ public class DialogueManager : MonoBehaviour
         numDialogue = 0;
         canDestroy = true;
         destropNpc(encounters);
+
+        if (encounters == 3)
+        {
+            LogicManager.goToEndScene();
+        }
     }
 
     public void destropNpc(int encounter)
     {
         if (!dialogueIsActive && canDestroy)
         {
+            player.hasMask = true;
             if (encounter == 1)
             {
                 Destroy(encounter1);
@@ -115,6 +125,8 @@ public class DialogueManager : MonoBehaviour
             else if (encounter == 2)
             {
                 Destroy(encounter2);
+                encounter3.SetActive(true);
+                isB4Boss = true;
             }
         }
     }

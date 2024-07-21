@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - NPC
   - CheckPoint
+  - B4Boss
   layers:
   - Default
   - TransparentFX

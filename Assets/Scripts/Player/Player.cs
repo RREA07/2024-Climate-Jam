@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     private LogicManager logicManager;
     private SoundFXManager soundFXManager;
     private Animator ani;
-    private float attackCoolDown = 0.4f;
+    private float attackCoolDown = 0.5f;
     private float attackCoolDownCounter = 0f;
     private float iframe;
     public bool canMove;
@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
     public bool dJump;
     private int dJumpCoolDown = 0;
     public bool canAttack;
-    public bool hasMask = false;
+    public bool hasMask;
     #endregion
 
     #region Updates
@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
 
         //Sets starting health
         playerHealth = 4f;
-
+        hasMask = false;
         canMove = true;
     }
 
@@ -134,6 +134,8 @@ public class Player : MonoBehaviour
             dJumpCoolDown = 1;
         }
         jumped = false;
+
+        ani.SetBool("hasMask", hasMask);
     }
     #endregion
 
