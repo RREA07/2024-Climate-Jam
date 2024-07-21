@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     public bool dJump;
     private int dJumpCoolDown = 0;
     public bool canAttack;
+    public bool hasMask = false;
     #endregion
 
     #region Updates
