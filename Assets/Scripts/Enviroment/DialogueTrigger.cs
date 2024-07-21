@@ -35,7 +35,6 @@ public class DialogueTrigger : MonoBehaviour
             if (manager.numDialogue == 12)
             {
                 Debug.Log("reached leap 1");
-                transform.localScale = new Vector3(1, 1, 1);
                 ani.SetTrigger("Leap");
             }
         }
@@ -43,9 +42,13 @@ public class DialogueTrigger : MonoBehaviour
         {
             if (manager.numDialogue == 14)
             {
-                transform.localScale = new Vector3(1, 1, 1);
                 ani.SetTrigger("Leap");
             }
+        }
+
+        if (manager.isB4Boss)
+        {
+            ani.SetBool("B4Boss", true);
         }
     }
 
@@ -62,7 +65,6 @@ public class DialogueTrigger : MonoBehaviour
             player.canMove = false;
             Cursor.visible = true;
             triggerDialogue();
-            transform.localScale = new Vector3(-1, 1, 1);
             passedFirst = true;
         }
     }
