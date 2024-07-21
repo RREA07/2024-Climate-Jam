@@ -17,6 +17,6 @@ public class MainMenu : MonoBehaviour
 
     public void goToLink()
     {
-
+        Application.OpenURL("https://www.usgs.gov/special-topics/water-science-school/science/acid-rain-and-water");
     }
 }
