@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
     // Internal variables
     private Rigidbody2D rb;
     private bool isGrounded;
-    private bool jumped;
     private float moveInput;
     private ParticleSystem jumpDustInst;
     private ParticleSystem saveDustInst;
@@ -94,7 +93,6 @@ public class Player : MonoBehaviour
         //Movement
         move();
         jump();
-        ani.SetBool("Jump", jumped);
         ani.SetBool("Run", moveInput != 0 && canMove);
         if (User_Input.instance.controls.Attacking.Melee.WasPressedThisFrame() && attackCoolDownCounter >= attackCoolDown && canAttack && canMove)
         {
@@ -133,7 +131,6 @@ public class Player : MonoBehaviour
         {
             dJumpCoolDown = 1;
         }
-        jumped = false;
 
         ani.SetBool("hasMask", hasMask);
     }
@@ -178,7 +175,7 @@ public class Player : MonoBehaviour
                 {
                     soundFXManager.playSFX(soundFXManager.playerJump);
                 }
-                jumped = true;
+                ani.SetTrigger("Jump");
             }
         }
     }
