@@ -274,14 +274,14 @@ public class Player : MonoBehaviour
             saveDustInst = Instantiate(saveDust, collision.transform.position, Quaternion.identity);
         }
 
-        if (collision.tag == "NPC")
+        /*if (collision.tag == "NPC")
         {
             if (collision.GetComponent<DialogueTrigger>().passedFirst)
             {
                 canAttack = true;
                 dJump = true;
             }
-        }
+        }*/
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
