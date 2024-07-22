@@ -12,6 +12,7 @@ public class SceneChanger_Outro : MonoBehaviour
         if (changeTime <= 0)
         {
             SceneManager.LoadScene("End Menu");
+            Cursor.visible = true;
         }
 
     }
