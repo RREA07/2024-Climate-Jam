@@ -213,6 +213,8 @@ MonoBehaviour:
   pointA: {fileID: 158726110569903301}
   pointB: {fileID: 787080026794751897}
   speed: 2.5
+  hitPause: 0
+  hitDust: {fileID: 4395077848452199227, guid: b986736dd2739414b9122d120791ae38, type: 3}
   groundCheck: {fileID: 6187994209145395992}
   checkRadius: 0.1
   whatIsGround:

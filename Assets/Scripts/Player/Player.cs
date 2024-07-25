@@ -273,15 +273,6 @@ public class Player : MonoBehaviour
             soundFXManager.playSFX(soundFXManager.saved);
             saveDustInst = Instantiate(saveDust, collision.transform.position, Quaternion.identity);
         }
-
-        /*if (collision.tag == "NPC")
-        {
-            if (collision.GetComponent<DialogueTrigger>().passedFirst)
-            {
-                canAttack = true;
-                dJump = true;
-            }
-        }*/
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

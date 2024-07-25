@@ -16,6 +16,9 @@ public class Enemy_Basic : MonoBehaviour, Damage
     private Transform currentPoint;
     private SoundFXManager soundFXManager;
     public float speed = 2f;
+    public float hitPause = 0f;
+    private ParticleSystem hitDustInst;
+    [SerializeField] private ParticleSystem hitDust;
 
     // Ground check variables
     public UnityEngine.Transform groundCheck;
@@ -37,6 +40,33 @@ public class Enemy_Basic : MonoBehaviour, Damage
         //Enemy Ground Check
         bool previousGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+
+        if (hitPause <= 0)
+        {
+            move();
+        }
+
+        if (hitPause >= 0)
+        {
+            hitPause -= Time.deltaTime;
+        }
+    }
+
+    //Taking damge from player
+    public void takeDamage(float hitPoints)
+    {
+        currentHealth -= hitPoints;
+        soundFXManager.playSFX(soundFXManager.enemyLooseHealth);
+        hitDustInst = Instantiate(hitDust, transform.position, Quaternion.identity);
+        hitPause = 1.5f;
+        if (currentHealth <= 0)
+        {
+            defeat();
+        }
+    }
+
+    public void move()
+    {
         //Path finding
         Vector2 point = currentPoint.position - transform.position;
         if (currentPoint == pointB.transform)
@@ -58,18 +88,6 @@ public class Enemy_Basic : MonoBehaviour, Damage
         if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointA.transform)
         {
             currentPoint = pointB.transform;
-        }
-    }
-
-    //Taking damge from player
-    public void takeDamage(float hitPoints)
-    {
-        currentHealth -= hitPoints;
-        soundFXManager.playSFX(soundFXManager.enemyLooseHealth);
-        //GetComponent<HitPause>().stopTime(0.05f, 10, 0.1f);
-        if (currentHealth <= 0)
-        {
-            defeat();
         }
     }
 
